@@ -9,7 +9,7 @@ class QuotesController < Rulers::Controller
   end
 
   def index
-    quotes = Rulers::Model::FileModel.all
+    quotes = FileModel.all
     render :index, :quotes => quotes
   end
 
@@ -19,8 +19,26 @@ class QuotesController < Rulers::Controller
       "quote" => "A picture is worth a thousand pixels",
       "attribution" => "Me"
     }
-    m = Rulers::Model::FileModel.create attrs
+    m = FileModel.create attrs
     render :quote, :obj => m
+  end
+
+  def show
+    quote = FileModel.find(params["id"])
+    ua = request.user_agent
+    render :quote, :obj => quote, :ua => ua
+  end
+
+  def update_quote
+    attrs = {
+      "id" => "1",
+      "submitter" => "Update Bot",
+      "quote" => "This quote has been updated",
+      "attribution" => "Unknown"
+      }
+      FileModel.update attrs
+      quotes = FileModel.all
+      render :index, :quotes => quotes
   end
 end
 
